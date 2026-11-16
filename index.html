@@ -1,0 +1,674 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AutoSphere Global | دليل خدمات السيارات في العراق</title>
+  <meta name="description" content="دليل خدمات السيارات في العراق: تعبئة الوقود، الشحن الكهربائي، السحب، الإطفاء، الزيوت، الغسيل والصيانة. تواصل مباشرة عبر واتساب.">
+  <meta name="theme-color" content="#0b1220">
+  <meta name="robots" content="index, follow">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" href="./icons/icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700;800&display=swap">
+  <link rel="stylesheet" href="./vendor/leaflet/leaflet.css">
+  <style>
+    :root {
+      --bg: #0b1220;
+      --panel: #121b2e;
+      --line: #22304d;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --wa: #25d366;
+      --danger: #f87171;
+      --ok: #4ade80;
+    }
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    html { color-scheme: dark; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Noto Sans Arabic', system-ui, -apple-system, 'Segoe UI', Tahoma, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    a { color: var(--accent); }
+    .wrap { width: 100%; max-width: 960px; margin: 0 auto; padding: 0 16px; }
+    main { flex: 1; padding-bottom: 32px; }
+
+    /* الرأس */
+    header {
+      position: sticky; top: 0; z-index: 10;
+      background: rgba(11, 18, 32, 0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--line);
+    }
+    .bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 60px; }
+    .brand { display: flex; align-items: center; gap: 10px; color: var(--text); text-decoration: none; font-weight: 800; }
+    .logo { width: 36px; height: 36px; border-radius: 10px; background: var(--accent); display: grid; place-items: center; font-size: 20px; }
+    select, input {
+      font: inherit; color: var(--text); background: var(--panel);
+      border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px;
+      min-height: 44px; font-size: 16px; width: 100%;
+    }
+    select:focus, input:focus, button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .lang { width: auto; min-width: 110px; }
+
+    /* الصفحة الرئيسية */
+    .hero { padding: 40px 0 24px; text-align: center; }
+    .hero h1 { font-size: clamp(28px, 6vw, 42px); margin: 0 0 8px; line-height: 1.3; font-weight: 800; }
+    .hero p { color: var(--muted); margin: 0 auto; max-width: 620px; }
+    .icons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 24px 0 32px; }
+    .icon-btn {
+      background: var(--panel); border: 1px solid var(--line); border-radius: 16px;
+      padding: 16px 8px; color: var(--text); font: inherit; cursor: pointer;
+      display: flex; flex-direction: column; align-items: center; gap: 8px; min-height: 96px;
+      text-decoration: none; font-size: 14px; font-weight: 700;
+    }
+    .icon-btn:hover { border-color: var(--accent); }
+    .icon-btn span.e { font-size: 28px; line-height: 1; }
+    .cards { display: grid; grid-template-columns: 1fr; gap: 16px; }
+    @media (min-width: 640px) { .cards { grid-template-columns: 1fr 1fr; } .icons { grid-template-columns: repeat(8, 1fr); } }
+    .card {
+      background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 24px;
+      display: flex; flex-direction: column; gap: 12px; text-decoration: none; color: var(--text);
+    }
+    .card:hover { border-color: var(--accent); }
+    .card h2 { margin: 0; font-size: 20px; }
+    .card p { margin: 0; color: var(--muted); font-size: 15px; }
+    .card .go { color: var(--accent); font-weight: 700; margin-top: auto; }
+
+    /* الصفحات الداخلية */
+    .page { padding-top: 24px; }
+    .back { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; color: var(--accent); text-decoration: none; font-weight: 700; background: none; border: 0; font: inherit; cursor: pointer; padding: 0; }
+    h2.page-title { font-size: 26px; margin: 12px 0 4px; font-weight: 800; }
+    h2.page-title:focus { outline: none; }
+    .page-sub { color: var(--muted); margin: 0 0 20px; }
+    .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 20px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr; gap: 12px; }
+    @media (min-width: 640px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
+    label { display: block; font-weight: 700; margin-bottom: 6px; font-size: 15px; }
+    .opt { color: var(--muted); font-weight: 400; font-size: 13px; }
+    .field { margin-bottom: 14px; }
+    .err { color: var(--danger); font-size: 14px; margin-top: 6px; min-height: 0; }
+    .status { font-size: 14px; color: var(--muted); margin-top: 10px; }
+    .status.ok { color: var(--ok); }
+    .status.bad { color: var(--danger); }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      min-height: 48px; padding: 12px 18px; border-radius: 12px; border: 1px solid var(--line);
+      background: var(--panel); color: var(--text); font: inherit; font-weight: 700; cursor: pointer; text-decoration: none; font-size: 15px;
+    }
+    .btn-primary { background: var(--accent); color: #04101d; border-color: var(--accent); width: 100%; }
+    .btn-wa { background: var(--wa); color: #04210f; border-color: var(--wa); }
+    .btn-small { min-height: 40px; padding: 8px 12px; font-size: 14px; }
+    .btn:hover { filter: brightness(1.08); }
+    .row-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+
+    .filters { display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 16px; }
+    @media (min-width: 640px) { .filters { grid-template-columns: 1fr 1fr; } }
+
+    .results { display: grid; grid-template-columns: 1fr; gap: 12px; margin: 16px 0; }
+    @media (min-width: 640px) { .results { grid-template-columns: 1fr 1fr; } }
+    .place { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 16px; }
+    .place h3 { margin: 0; font-size: 17px; }
+    .place .meta { color: var(--muted); font-size: 14px; margin: 2px 0; }
+    .place .desc { font-size: 14px; margin: 8px 0 0; }
+    .badge { display: inline-block; color: var(--ok); font-size: 13px; font-weight: 700; margin-top: 4px; }
+    .empty { text-align: center; color: var(--muted); padding: 28px 16px; border: 1px dashed var(--line); border-radius: 16px; }
+    .empty .btn { margin-top: 12px; }
+
+    #map { height: 320px; border-radius: 16px; border: 1px solid var(--line); margin-top: 8px; background: #0f1830; }
+    .map-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 24px; }
+    .map-head h3 { margin: 0; font-size: 18px; }
+
+    .notice { color: var(--muted); font-size: 13px; margin-top: 12px; }
+    footer { border-top: 1px solid var(--line); padding: 20px 0; color: var(--muted); font-size: 13px; text-align: center; }
+    .leaflet-container { font-family: inherit; }
+    .pin-name { font-weight: 700; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap bar">
+      <a class="brand" href="#home" aria-label="AutoSphere Global">
+        <span class="logo" aria-hidden="true">🚗</span>
+        <span>AutoSphere</span>
+      </a>
+      <label class="sr-only" for="lang-select" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Language</label>
+      <select id="lang-select" class="lang" aria-label="Language">
+        <option value="ar">العربية</option>
+        <option value="en">English</option>
+        <option value="ku">کوردی</option>
+      </select>
+    </div>
+  </header>
+
+  <main>
+    <!-- الصفحة الرئيسية -->
+    <section data-view="home" class="wrap">
+      <div class="hero">
+        <h1 data-i18n="heroTitle">سيارتك تحتاج عناية؟</h1>
+        <p data-i18n="heroText">اختر الخدمة التي تحتاجها، وتواصل مع المركز مباشرة عبر واتساب.</p>
+      </div>
+
+      <nav class="icons" aria-label="الخدمات">
+        <button class="icon-btn" type="button" data-cat="fuel"><span class="e" aria-hidden="true">⛽</span><span data-i18n="catFuel">تعبئة الوقود</span></button>
+        <button class="icon-btn" type="button" data-cat="electric"><span class="e" aria-hidden="true">⚡</span><span data-i18n="catElectric">شحن وكهرباء</span></button>
+        <button class="icon-btn" type="button" data-cat="tow"><span class="e" aria-hidden="true">🚚</span><span data-i18n="catTow">سحب ونقل</span></button>
+        <button class="icon-btn" type="button" data-cat="fire"><span class="e" aria-hidden="true">🧯</span><span data-i18n="catFire">طفايات</span></button>
+        <button class="icon-btn" type="button" data-cat="oil"><span class="e" aria-hidden="true">🛢️</span><span data-i18n="catOil">تغيير الزيت</span></button>
+        <button class="icon-btn" type="button" data-cat="wash"><span class="e" aria-hidden="true">🚿</span><span data-i18n="catWash">غسيل</span></button>
+        <button class="icon-btn" type="button" data-cat="tires"><span class="e" aria-hidden="true">🛞</span><span data-i18n="catTires">إطارات</span></button>
+        <button class="icon-btn" type="button" data-cat="repair"><span class="e" aria-hidden="true">🔧</span><span data-i18n="catRepair">صيانة</span></button>
+      </nav>
+
+      <div class="cards">
+        <a class="card" href="#add">
+          <h2 data-i18n="cardAddTitle">أضف خدمتك</h2>
+          <p data-i18n="cardAddText">لديك مركز أو خدمة للسيارات؟ سجّلها في دقيقة برقم واتساب فقط.</p>
+          <span class="go" data-i18n="cardAddGo">ابدأ التسجيل ←</span>
+        </a>
+        <a class="card" href="#find">
+          <h2 data-i18n="cardFindTitle">أبحث عن خدمة</h2>
+          <p data-i18n="cardFindText">اختر نوع الخدمة والمدينة، وشاهد الأماكن على الخريطة.</p>
+          <span class="go" data-i18n="cardFindGo">ابدأ البحث ←</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- صفحة البحث -->
+    <section data-view="find" class="wrap page" hidden aria-labelledby="find-title">
+      <a class="back" href="#home" data-i18n="back">→ رجوع</a>
+      <h2 class="page-title" id="find-title" tabindex="-1" data-i18n="findTitle">أبحث عن خدمة</h2>
+      <p class="page-sub" data-i18n="findText">اختر ما تحتاجه. النتائج تُعرض هنا وعلى الخريطة.</p>
+
+      <div class="filters">
+        <div>
+          <label for="find-cat" data-i18n="fCategory">نوع الخدمة</label>
+          <select id="find-cat"></select>
+        </div>
+        <div>
+          <label for="find-city" data-i18n="fCity">المدينة</label>
+          <select id="find-city"></select>
+        </div>
+      </div>
+
+      <div id="results" class="results" aria-live="polite"></div>
+
+      <div class="map-head">
+        <h3 data-i18n="mapTitle">الخريطة</h3>
+        <button class="btn btn-small" type="button" id="locate-btn" data-i18n="locate">موقعي</button>
+      </div>
+      <div id="map" role="region" aria-label="خريطة الخدمات"></div>
+      <p id="map-status" class="status" role="status"></p>
+    </section>
+
+    <!-- صفحة الإضافة -->
+    <section data-view="add" class="wrap page" hidden aria-labelledby="add-title">
+      <a class="back" href="#home" data-i18n="back">→ رجوع</a>
+      <h2 class="page-title" id="add-title" tabindex="-1" data-i18n="addTitle">أضف خدمتك</h2>
+      <p class="page-sub" data-i18n="addText">أدخل رقم واتساب، وحدد نوع الخدمة. يُرسل الطلب لنا عبر واتساب ليتم التحقق منه ونشره.</p>
+
+      <form id="add-form" class="panel" novalidate>
+        <div class="field">
+          <label for="add-name"><span data-i18n="fName">الاسم</span> <span class="opt" data-i18n="optional">(اختياري)</span></label>
+          <input id="add-name" name="name" type="text" maxlength="60" autocomplete="name">
+        </div>
+
+        <div class="field">
+          <label for="add-phone"><span data-i18n="fPhone">رقم واتساب</span> <span class="opt" data-i18n="required">(مطلوب)</span></label>
+          <input id="add-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="07801234567" dir="ltr">
+          <p id="err-phone" class="err" role="alert"></p>
+        </div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label for="add-service"><span data-i18n="fService">نوع الخدمة</span> <span class="opt" data-i18n="required">(مطلوب)</span></label>
+            <select id="add-service" name="service"></select>
+            <p id="err-service" class="err" role="alert"></p>
+          </div>
+          <div class="field">
+            <label for="add-city"><span data-i18n="fCity">المدينة</span> <span class="opt" data-i18n="optional">(اختياري)</span></label>
+            <select id="add-city" name="city"></select>
+          </div>
+        </div>
+
+        <div class="field">
+          <span class="btn" id="geo-btn" role="button" tabindex="0" data-i18n="fLocationBtn" style="width:100%;cursor:pointer">📍 حدّد موقعي على الخريطة (اختياري)</span>
+          <p id="geo-status" class="status" role="status"></p>
+        </div>
+
+        <button class="btn btn-primary btn-wa" type="submit" id="add-submit" data-i18n="fSubmit">أرسل الطلب عبر واتساب</button>
+        <p id="add-status" class="status" role="status"></p>
+        <p class="notice" data-i18n="privacyNote">لا نحفظ بياناتك على الموقع. الطلب يُرسل عبر واتساب فقط، ولا يُنشر رقمك إلا بموافقتك.</p>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <p data-i18n="footer">AutoSphere Global · دليل خدمات السيارات في العراق</p>
+    </div>
+  </footer>
+
+  <script src="./js/phone.js"></script>
+  <script src="./vendor/leaflet/leaflet.js"></script>
+  <script>
+  (() => {
+    'use strict';
+
+    // ======= الإعدادات =======
+    // adminWhatsApp: رقم واتساب الذي تصل إليه طلبات التسجيل، مثل 07801234567.
+    //   إذا بقي فارغاً يفتح واتساب ويختار المستخدم جهة الإرسال بنفسه.
+    // providers: الأنشطة المعتمدة فقط. كل نشاط يُضاف بعد زيارته والتحقق منه.
+    //   { name, category, governorate, area, whatsapp, phone, hours, description, lat, lng, verified, verifiedDate }
+    const CONFIG = {
+      adminWhatsApp: '',
+      providers: []
+    };
+
+    const Phone = window.AutoSpherePhone;
+    const $ = id => document.getElementById(id);
+    const DEFAULT_CENTER = [33.4258, 43.2999]; // الرمادي
+    const DEFAULT_ZOOM = 12;
+
+    // ======= الأنواع والمدن =======
+    const CATEGORIES = ['fuel', 'electric', 'tow', 'fire', 'oil', 'wash', 'tires', 'repair', 'body', 'coating', 'other'];
+    const CITIES = ['الأنبار', 'بغداد', 'البصرة', 'نينوى', 'كركوك', 'صلاح الدين', 'ديالى', 'أربيل', 'السليمانية', 'دهوك', 'أخرى'];
+    const CITY_LABEL = {
+      'الأنبار': { en: 'Anbar', ku: 'ئەنبار' },
+      'بغداد': { en: 'Baghdad', ku: 'بەغدا' },
+      'البصرة': { en: 'Basra', ku: 'بەسرە' },
+      'نينوى': { en: 'Nineveh', ku: 'نینەوا' },
+      'كركوك': { en: 'Kirkuk', ku: 'کەرکووک' },
+      'صلاح الدين': { en: 'Salah al-Din', ku: 'سەلاحەدین' },
+      'ديالى': { en: 'Diyala', ku: 'دیالە' },
+      'أربيل': { en: 'Erbil', ku: 'هەولێر' },
+      'السليمانية': { en: 'Sulaymaniyah', ku: 'سلێمانی' },
+      'دهوك': { en: 'Duhok', ku: 'دهۆک' },
+      'أخرى': { en: 'Other', ku: 'شوێنی تر' }
+    };
+
+    // ======= الترجمات =======
+    const T = {
+      ar: {
+        heroTitle: 'سيارتك تحتاج عناية؟', heroText: 'اختر الخدمة التي تحتاجها، وتواصل مع المركز مباشرة عبر واتساب.',
+        catFuel: 'تعبئة الوقود', catElectric: 'شحن وكهرباء', catTow: 'سحب ونقل', catFire: 'طفايات', catOil: 'تغيير الزيت', catWash: 'غسيل', catTires: 'إطارات', catRepair: 'صيانة',
+        cardAddTitle: 'أضف خدمتك', cardAddText: 'لديك مركز أو خدمة للسيارات؟ سجّلها برقم واتساب فقط.', cardAddGo: 'ابدأ التسجيل ←',
+        cardFindTitle: 'أبحث عن خدمة', cardFindText: 'اختر نوع الخدمة والمدينة، وشاهد الأماكن على الخريطة.', cardFindGo: 'ابدأ البحث ←',
+        back: '→ رجوع', findTitle: 'أبحث عن خدمة', findText: 'اختر ما تحتاجه. النتائج تظهر هنا وعلى الخريطة.',
+        fCategory: 'نوع الخدمة', fCity: 'المدينة', allCategories: 'كل الخدمات', allCities: 'كل المدن',
+        noResults: 'لا توجد أنشطة معتمدة لهذا الاختيار بعد.', addFirst: 'أضف خدمتك الآن',
+        mapTitle: 'الخريطة', locate: 'موقعي', mapUnavailable: 'الخريطة غير متاحة الآن. تحقق من الاتصال بالإنترنت، والنتائج تظهر في القائمة.',
+        locating: 'جارٍ تحديد موقعك...', locateFail: 'تعذّر تحديد موقعك. تأكد من السماح بالموقع في المتصفح.', locateNoSupport: 'جهازك لا يدعم تحديد الموقع.',
+        addTitle: 'أضف خدمتك', addText: 'أدخل رقم واتساب، وحدد نوع الخدمة. يُرسل الطلب لنا عبر واتساب ليتم التحقق منه ونشره.',
+        fName: 'الاسم', fPhone: 'رقم واتساب', fService: 'نوع الخدمة', fLocationBtn: '📍 حدّد موقعي (اختياري)',
+        optional: '(اختياري)', required: '(مطلوب)',
+        errPhone: 'أدخل رقم واتساب عراقي صحيح، مثل 07801234567.', errService: 'اختر نوع الخدمة.',
+        geoOk: 'تم تحديد موقعك.', geoSet: 'تم تحديد موقعك ✓',
+        fSubmit: 'أرسل الطلب عبر واتساب', sentOk: 'فُتح واتساب ويحتوي الطلب جاهزاً. اضغط إرسال لإكمال الطلب.',
+        popupBlocked: 'منع المتصفح فتح واتساب. اسمح بالنوافذ المنبثقة وأعد المحاولة.',
+        privacyNote: 'لا نحفظ بياناتك على الموقع. الطلب يُرسل عبر واتساب فقط، ولا يُنشر رقمك إلا بموافقتك.',
+        verified: 'متحقق من فريق الدليل', btnWa: 'واتساب', btnCall: 'اتصال', hours: 'ساعات العمل',
+        footer: 'AutoSphere Global · دليل خدمات السيارات في العراق',
+        msgTitle: 'طلب تسجيل خدمة في AutoSphere', msgName: 'الاسم', msgPhone: 'رقمي على واتساب', msgService: 'نوع الخدمة', msgCity: 'المدينة', msgLoc: 'الموقع'
+      },
+      en: {
+        heroTitle: 'Does your car need care?', heroText: 'Choose the service you need and contact the business directly on WhatsApp.',
+        catFuel: 'Fuel', catElectric: 'EV & electrical', catTow: 'Towing', catFire: 'Extinguishers', catOil: 'Oil change', catWash: 'Car wash', catTires: 'Tires', catRepair: 'Maintenance',
+        cardAddTitle: 'Add your service', cardAddText: 'Do you run a car service? Register with your WhatsApp number only.', cardAddGo: 'Start registering →',
+        cardFindTitle: 'Find a service', cardFindText: 'Pick a service and city, then see places on the map.', cardFindGo: 'Start searching →',
+        back: '← Back', findTitle: 'Find a service', findText: 'Choose what you need. Results appear here and on the map.',
+        fCategory: 'Service type', fCity: 'City', allCategories: 'All services', allCities: 'All cities',
+        noResults: 'No approved businesses match this choice yet.', addFirst: 'Add your service now',
+        mapTitle: 'Map', locate: 'My location', mapUnavailable: 'The map is unavailable right now. Check your internet connection; results still appear in the list.',
+        locating: 'Finding your location...', locateFail: 'Could not find your location. Allow location access in your browser.', locateNoSupport: 'Your device does not support location.',
+        addTitle: 'Add your service', addText: 'Enter your WhatsApp number and choose the service type. The request is sent to us on WhatsApp for verification.',
+        fName: 'Name', fPhone: 'WhatsApp number', fService: 'Service type', fLocationBtn: '📍 Set my location (optional)',
+        optional: '(optional)', required: '(required)',
+        errPhone: 'Enter a valid Iraqi WhatsApp number, such as 07801234567.', errService: 'Choose a service type.',
+        geoOk: 'Your location was set.', geoSet: 'Location set ✓',
+        fSubmit: 'Send request on WhatsApp', sentOk: 'WhatsApp opened with your request ready. Press send to finish.',
+        popupBlocked: 'Your browser blocked WhatsApp. Allow pop-ups and try again.',
+        privacyNote: 'We do not store your data on this site. The request is sent via WhatsApp only, and your number is not published without your consent.',
+        verified: 'Verified by the directory team', btnWa: 'WhatsApp', btnCall: 'Call', hours: 'Hours',
+        footer: 'AutoSphere Global · Car services directory for Iraq',
+        msgTitle: 'Service registration request on AutoSphere', msgName: 'Name', msgPhone: 'My WhatsApp', msgService: 'Service type', msgCity: 'City', msgLoc: 'Location'
+      },
+      ku: {
+        heroTitle: 'ئایا ئۆتۆمبیلەکەت پێویستی بە چاودێریە؟', heroText: 'خزمەتگوزارییەک هەڵبژێرە و ڕاستەوخۆ لە واتساپ پەیوەندی بە ناوەندەکە بکە.',
+        catFuel: 'وەشاندنی سووتەمەنی', catElectric: 'شارژ و کارەبا', catTow: 'ڕاکێشان', catFire: 'کوژێنەرەوە', catOil: 'گۆڕینی زەیت', catWash: 'شوشتن', catTires: 'تایەکان', catRepair: 'چاککردنەوە',
+        cardAddTitle: 'خزمەتگوزاریەکەت زیاد بکە', cardAddText: 'ناوەندێکی ئۆتۆمبێلت هەیە؟ تەنها بە ژمارەی واتساپ تۆماری بکە.', cardAddGo: 'دەستپێکردنی تۆمارکردن ←',
+        cardFindTitle: 'خزمەتگوزاری بدۆزەرەوە', cardFindText: 'جۆر و شارێک هەڵبژێرە، و شوێنەکان لەسەر نەخشە ببینە.', cardFindGo: 'دەستپێکردنی گەڕان ←',
+        back: '→ گەڕانەوە', findTitle: 'خزمەتگوزاری بدۆزەرەوە', findText: 'ئەوەی پێویستتە هەڵبژێرە. ئەنجامەکان لێرە و لەسەر نەخشە دەردەکەون.',
+        fCategory: 'جۆری خزمەتگوزاری', fCity: 'شار', allCategories: 'هەموو خزمەتگوزارییەکان', allCities: 'هەموو شارەکان',
+        noResults: 'هێشتا هیچ چالاکییەکی پەسەندکراو بۆ ئەم هەڵبژاردنە نییە.', addFirst: 'ئێستا خزمەتگوزاریەکەت زیاد بکە',
+        mapTitle: 'نەخشە', locate: 'شوێنەکەم', mapUnavailable: 'نەخشە ئێستا بەردەست نییە. پەیوەندی ئینتەرنێتەکەت بپشکنە؛ ئەنجامەکان لە لیستەکەدا دەردەکەون.',
+        locating: 'شوێنەکەت دەدۆزرێتەوە...', locateFail: 'نەتوانرا شوێنەکەت بدۆزرێتەوە. ڕێگە بدە بە شوێن لە وێبگەڕەکەدا.', locateNoSupport: 'ئامێرەکەت پشتگیری شوێن ناکات.',
+        addTitle: 'خزمەتگوزاریەکەت زیاد بکە', addText: 'ژمارەی واتساپ بنووسە و جۆری خزمەتگوزاری هەڵبژێرە. داواکارییەکە لە واتساپ بۆ ئێمە دەنێردرێت بۆ پشتڕاستکردنەوە.',
+        fName: 'ناو', fPhone: 'ژمارەی واتساپ', fService: 'جۆری خزمەتگوزاری', fLocationBtn: '📍 شوێنەکەم دیاری بکە (ئارەزوومەندانە)',
+        optional: '(ئارەزوومەندانە)', required: '(پێویستە)',
+        errPhone: 'ژمارەی واتساپی عێراقی دروست بنووسە، وەک 07801234567.', errService: 'جۆری خزمەتگوزاری هەڵبژێرە.',
+        geoOk: 'شوێنەکەت تۆمار کرا.', geoSet: 'شوێن دیاری کرا ✓',
+        fSubmit: 'ناردنی داواکاری لە واتساپ', sentOk: 'واتساپ کرایەوە و داواکارییەکەت ئامادەیە. کلیک لە ناردن بکە بۆ تەواوکردن.',
+        popupBlocked: 'وێبگەڕەکەت واتساپی بلۆک کرد. پەنجەرەی پۆپئەپ ڕێگە پێبدە و دووبارە هەوڵ بدەرەوە.',
+        privacyNote: 'زانیاریەکانت لەسەر ماڵپەڕ هەڵناگیرێن. داواکارییەکە تەنها لە واتساپەوە دەنێردرێت، و ژمارەکەت بێ ڕەزامەندیت بڵاو ناکرێتەوە.',
+        verified: 'پشتڕاستکراوە لەلایەن تیمی دەستنیشانکردن', btnWa: 'واتساپ', btnCall: 'پەیوەندی', hours: 'کاتەکانی کار',
+        footer: 'AutoSphere Global · ڕێنمای خزمەتگوزاری ئۆتۆمبێل لە عێراق',
+        msgTitle: 'داواکاری تۆمارکردنی خزمەتگوزاری لە AutoSphere', msgName: 'ناو', msgPhone: 'ژمارەی واتسابم', msgService: 'جۆری خزمەتگوزاری', msgCity: 'شار', msgLoc: 'شوێن'
+      }
+    };
+
+    let lang = 'ar';
+    try { const saved = localStorage.getItem('as_lang'); if (T[saved]) lang = saved; } catch (_) { /* التخزين غير متاح */ }
+    const t = key => (T[lang] && T[lang][key]) || T.ar[key] || key;
+    const catLabel = key => {
+      const names = {
+        fuel: 'تعبئة الوقود', electric: 'شحن وكهرباء السيارات', tow: 'سحب ونقل', fire: 'طفايات وإطفاء',
+        oil: 'تغيير الزيت', wash: 'غسيل وتنظيف', tires: 'إطارات وبنشر', repair: 'صيانة وميكانيك',
+        body: 'سمكرة ودهان', coating: 'تغليف وحماية', other: 'نشاط آخر'
+      };
+      const en = { fuel: 'Fuel', electric: 'EV & electrical', tow: 'Towing', fire: 'Extinguishers', oil: 'Oil change', wash: 'Car wash', tires: 'Tires', repair: 'Maintenance', body: 'Body & paint', coating: 'Coating & protection', other: 'Other' };
+      const ku = { fuel: 'وەشاندنی سووتەمەنی', electric: 'شارژ و کارەبای ئۆتۆمبێل', tow: 'ڕاکێشان', fire: 'کوژێنەرەوە', oil: 'گۆڕینی زەیت', wash: 'شوشتن', tires: 'تایەکان', repair: 'چاککردنەوە', body: 'سمکری و بۆیە', coating: 'تەواوکاری و پاراستن', other: 'چالاکیی تر' };
+      const map = lang === 'en' ? en : lang === 'ku' ? ku : names;
+      return map[key] || map.other;
+    };
+    const cityLabel = c => (lang === 'ar' ? c : (CITY_LABEL[c] && CITY_LABEL[c][lang]) || c);
+
+    // ======= مساعدات =======
+    const safeText = (v, max) => String(v ?? '').replace(/[\u0000-\u001F]/g, ' ').trim().slice(0, max);
+    const setStatus = (el, key, tone) => { el.textContent = key ? t(key) : ''; el.className = 'status' + (tone ? ' ' + tone : ''); };
+
+    // ======= تهيئة القوائم =======
+    function fillSelects() {
+      const catSel = $('find-cat');
+      const prevCat = catSel.value || 'all';
+      catSel.replaceChildren(new Option(t('allCategories'), 'all'), ...CATEGORIES.map(c => new Option(catLabel(c), c)));
+      catSel.value = prevCat;
+
+      const citySel = $('find-city');
+      const prevCity = citySel.value || 'all';
+      citySel.replaceChildren(new Option(t('allCities'), 'all'), ...CITIES.map(c => new Option(cityLabel(c), c)));
+      citySel.value = prevCity;
+
+      const svc = $('add-service');
+      const prevSvc = svc.value;
+      svc.replaceChildren(new Option('—', ''), ...CATEGORIES.map(c => new Option(catLabel(c), c)));
+      svc.value = prevSvc;
+
+      const addCity = $('add-city');
+      const prevAddCity = addCity.value;
+      addCity.replaceChildren(new Option('—', ''), ...CITIES.map(c => new Option(cityLabel(c), c)));
+      addCity.value = prevAddCity;
+    }
+
+    // ======= بطاقات الأنشطة =======
+    function usableVerifiedDate(v) { return /^\d{4}-\d{2}-\d{2}$/.test(String(v || '')) ? v : ''; }
+
+    function providerCard(p) {
+      const art = document.createElement('article');
+      art.className = 'place';
+      const h = document.createElement('h3');
+      h.textContent = safeText(p.name, 80);
+      art.appendChild(h);
+
+      const meta = document.createElement('p');
+      meta.className = 'meta';
+      meta.textContent = [catLabel(p.category), cityLabel(p.governorate), safeText(p.area, 60)].filter(Boolean).join(' · ');
+      art.appendChild(meta);
+
+      if (p.verified === true) {
+        const b = document.createElement('span');
+        b.className = 'badge';
+        const d = usableVerifiedDate(p.verifiedDate);
+        b.textContent = '✓ ' + t('verified') + (d ? ' · ' + d : '');
+        art.appendChild(b);
+      }
+      if (p.hours) {
+        const hrs = document.createElement('p');
+        hrs.className = 'meta';
+        hrs.textContent = t('hours') + ': ' + safeText(p.hours, 80);
+        art.appendChild(hrs);
+      }
+      if (p.description) {
+        const d = document.createElement('p');
+        d.className = 'desc';
+        d.textContent = safeText(p.description, 300);
+        art.appendChild(d);
+      }
+
+      const actions = document.createElement('div');
+      actions.className = 'row-actions';
+      const wa = Phone.usableMobile(p.whatsapp);
+      if (wa) {
+        const a = document.createElement('a');
+        a.className = 'btn btn-small btn-wa';
+        a.href = 'https://wa.me/' + wa;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        a.textContent = t('btnWa');
+        actions.appendChild(a);
+      }
+      const call = Phone.usableMobile(p.phone);
+      if (call) {
+        const a = document.createElement('a');
+        a.className = 'btn btn-small';
+        a.href = 'tel:+' + call;
+        a.textContent = t('btnCall') + ' ' + Phone.formatLocalDisplay(call);
+        actions.appendChild(a);
+      }
+      if (actions.childElementCount) art.appendChild(actions);
+      return art;
+    }
+
+    // ======= الخريطة =======
+    let map = null;
+    let markers = null;
+    let mapFailed = false;
+
+    function ensureMap() {
+      if (map || mapFailed) return !!map;
+      if (!window.L) { mapFailed = true; $('map').hidden = true; setStatus($('map-status'), 'mapUnavailable', 'bad'); return false; }
+      map = L.map('map').setView(DEFAULT_CENTER, DEFAULT_ZOOM);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap',
+        referrerPolicy: 'strict-origin-when-cross-origin'
+      }).addTo(map);
+      markers = L.layerGroup().addTo(map);
+      return true;
+    }
+
+    function renderMarkers(list) {
+      if (!map) return;
+      markers.clearLayers();
+      list.forEach(p => {
+        const lat = Number(p.lat), lng = Number(p.lng);
+        if (!Number.isFinite(lat) || !Number.isFinite(lng) || Math.abs(lat) > 90 || Math.abs(lng) > 180) return;
+        const div = document.createElement('div');
+        const strong = document.createElement('strong');
+        strong.className = 'pin-name';
+        strong.textContent = safeText(p.name, 80);
+        div.appendChild(strong);
+        div.appendChild(document.createTextNode(' · ' + catLabel(p.category)));
+        L.marker([lat, lng]).bindPopup(div).addTo(markers);
+      });
+    }
+
+    // ======= نتائج البحث =======
+    function currentFilter() {
+      const cat = $('find-cat').value;
+      const city = $('find-city').value;
+      return CONFIG.providers.filter(p =>
+        (cat === 'all' || p.category === cat) && (city === 'all' || p.governorate === city)
+      );
+    }
+
+    function renderResults() {
+      const box = $('results');
+      const list = currentFilter();
+      box.replaceChildren();
+      if (!list.length) {
+        const empty = document.createElement('div');
+        empty.className = 'empty';
+        const msg = document.createElement('p');
+        msg.style.margin = '0';
+        msg.textContent = t('noResults');
+        const btn = document.createElement('a');
+        btn.className = 'btn';
+        btn.href = '#add';
+        btn.textContent = t('addFirst');
+        empty.append(msg, btn);
+        box.appendChild(empty);
+      } else {
+        list.forEach(p => box.appendChild(providerCard(p)));
+      }
+      if (map) renderMarkers(list);
+    }
+
+    // ======= التوجيه بين الصفحات =======
+    const VIEWS = ['home', 'find', 'add'];
+
+    function showView(name, opts) {
+      VIEWS.forEach(v => {
+        const el = document.querySelector(`[data-view="${v}"]`);
+        if (el) el.hidden = v !== name;
+      });
+      window.scrollTo(0, 0);
+      if (name === 'find') {
+        ensureMap();
+        if (map) setTimeout(() => map.invalidateSize(), 0);
+        renderResults();
+      }
+      const title = $(name + '-title');
+      if (title && !(opts && opts.noFocus)) title.focus({ preventScroll: true });
+    }
+
+    function route() {
+      const raw = location.hash.replace(/^#/, '');
+      const [name, query] = raw.split('?');
+      const view = VIEWS.includes(name) ? name : 'home';
+      if (view === 'find' && query) {
+        const cat = new URLSearchParams(query).get('cat');
+        if (cat && (CATEGORIES.includes(cat))) $('find-cat').value = cat;
+      }
+      showView(view, { noFocus: view === 'home' });
+    }
+
+    window.addEventListener('hashchange', route);
+
+    // أيقونات الصفحة الرئيسية تفتح البحث مباشرة على نوع الخدمة
+    document.querySelectorAll('[data-cat]').forEach(btn => btn.addEventListener('click', () => {
+      location.hash = '#find?cat=' + btn.dataset.cat;
+      if (location.hash === '#find?cat=' + btn.dataset.cat) route();
+    }));
+
+    $('find-cat').addEventListener('change', renderResults);
+    $('find-city').addEventListener('change', renderResults);
+
+    // ======= زر موقعي في البحث =======
+    $('locate-btn').addEventListener('click', () => {
+      if (!ensureMap()) return;
+      if (!navigator.geolocation) { setStatus($('map-status'), 'locateNoSupport', 'bad'); return; }
+      setStatus($('map-status'), 'locating');
+      navigator.geolocation.getCurrentPosition(pos => {
+        const { latitude, longitude } = pos.coords;
+        map.setView([latitude, longitude], 14);
+        L.circleMarker([latitude, longitude], { radius: 7, color: '#38bdf8', fillOpacity: 0.8 }).addTo(markers);
+        setStatus($('map-status'), '');
+      }, () => setStatus($('map-status'), 'locateFail', 'bad'), { enableHighAccuracy: true, timeout: 10000 });
+    });
+
+    // ======= نموذج الإضافة =======
+    let geo = null;
+    const geoBtn = $('geo-btn');
+    function setGeo() {
+      if (!navigator.geolocation) { setStatus($('geo-status'), 'locateNoSupport', 'bad'); return; }
+      setStatus($('geo-status'), 'locating');
+      navigator.geolocation.getCurrentPosition(pos => {
+        geo = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        setStatus($('geo-status'), 'geoOk', 'ok');
+        geoBtn.textContent = t('geoSet');
+      }, () => { geo = null; setStatus($('geo-status'), 'locateFail', 'bad'); }, { timeout: 10000 });
+    }
+    geoBtn.addEventListener('click', setGeo);
+    geoBtn.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setGeo(); } });
+
+    $('add-form').addEventListener('submit', e => {
+      e.preventDefault();
+      const phoneInput = $('add-phone');
+      const serviceSel = $('add-service');
+      const status = $('add-status');
+      $('err-phone').textContent = '';
+      $('err-service').textContent = '';
+      status.textContent = '';
+
+      const phone = Phone.usableMobile(phoneInput.value);
+      if (!phone) { $('err-phone').textContent = t('errPhone'); phoneInput.focus(); return; }
+      if (!serviceSel.value) { $('err-service').textContent = t('errService'); serviceSel.focus(); return; }
+
+      const name = safeText($('add-name').value, 60);
+      const city = $('add-city').value;
+      const lines = [
+        t('msgTitle'),
+        name ? `${t('msgName')}: ${name}` : null,
+        `${t('msgPhone')}: +${phone}`,
+        `${t('msgService')}: ${catLabel(serviceSel.value)}`,
+        city ? `${t('msgCity')}: ${cityLabel(city)}` : null,
+        geo ? `${t('msgLoc')}: https://maps.google.com/?q=${geo.lat.toFixed(5)},${geo.lng.toFixed(5)}` : null
+      ].filter(Boolean);
+      const text = encodeURIComponent(lines.join('\n'));
+
+      const admin = Phone.usableMobile(CONFIG.adminWhatsApp);
+      const url = admin ? `https://wa.me/${admin}?text=${text}` : `https://wa.me/?text=${text}`;
+
+      // فتح نافذة أولاً ثم توجيهها، حتى لا يُحظر الفتح بعد تأخير الشبكة
+      const win = window.open('', '_blank');
+      if (!win) { setStatus(status, 'popupBlocked', 'bad'); return; }
+      win.opener = null;
+      win.location.href = url;
+      setStatus(status, 'sentOk', 'ok');
+    });
+
+    // ======= اللغة =======
+    function applyLang() {
+      document.documentElement.lang = lang;
+      document.documentElement.dir = lang === 'en' ? 'ltr' : 'rtl';
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.dataset.i18n;
+        if (key === 'fLocationBtn' && geo) { el.textContent = t('geoSet'); return; }
+        el.textContent = t(key);
+      });
+      document.title = lang === 'ar'
+        ? 'AutoSphere Global | دليل خدمات السيارات في العراق'
+        : 'AutoSphere Global | Car services directory, Iraq';
+      $('lang-select').value = lang;
+      fillSelects();
+      if (map) renderMarkers(currentFilter());
+      renderResults();
+    }
+
+    $('lang-select').addEventListener('change', e => {
+      lang = T[e.target.value] ? e.target.value : 'ar';
+      try { localStorage.setItem('as_lang', lang); } catch (_) { /* اختياري */ }
+      applyLang();
+    });
+
+    // ======= الإقلاع =======
+    applyLang();
+    route();
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
+    }
+  })();
+  </script>
+</body>
+</html>

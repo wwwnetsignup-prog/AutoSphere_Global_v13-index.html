@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+# بعد النشر أضف سطر الخريطة بالرابط الحقيقي:
+# Sitemap: https://USERNAME.github.io/AutoSphere-Global/sitemap.xml
